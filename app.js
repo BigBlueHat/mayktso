@@ -35,7 +35,7 @@ var contentType = require('content-type');
 var bodyParser = require('body-parser');
 var app = express();
 var accept, requestedType;
-var availableTypes = ['application/ld+json', 'text/turtle'];
+var availableTypes = ['application/ld+json', 'text/turtle', 'text/html', 'application/xhtml+xml'];
 var mayktsoURI = 'https://github.com/csarven/mayktso';
 
 var vocab = {
@@ -597,13 +597,12 @@ function getTarget(req, res, next){
             }
 
             return next();
-          },
-          function(reason){
-            res.status(500);
-            res.end();
-            return next();
-          }
-        );
+          })
+        .catch(function(reason){
+          res.status(500);
+          res.end();
+          return next();
+        });
       }
     });
   });
@@ -662,22 +661,91 @@ function handleResource(req, res, next){
           var options = { 'subjectURI': req.getUrl() };
           var unserializeableCount = 0;
 
+          var candidateResponse = { 'status': '404' };
+
+          function getCandidateResponse(fromContentType) {
+                return serializeData(data, fromContentType, toContentType, options)
+                .then(function(transformedData){
+console.log('02 ' + fromContentType + ' ' + toContentType);
+                    var outputData = (fromContentType != toContentType) ? transformedData : data;
+
+                    candidateResponse = {
+                      'status': 200,
+                      'headers': {
+                        'Content-Type': requestedType +';charset=utf-8',
+                        'Content-Length': Buffer.byteLength(outputData, 'utf-8'),
+                        'ETag': etag(outputData),
+                        'Last-Modified': stats.mtime,
+                        'Vary': 'Origin',
+                        'Allow': 'GET, HEAD, OPTIONS'
+                      },
+                      'data': outputData
+                    };
+
+                    return candidateResponse;
+
+//                    return Promise.resolve(candidateResponse);
+                  }
+                )
+                .catch(function(reason){
+                  if ((fromContentType == 'text/html'|| fromContentType == 'application/xhtml+xml') && (toContentType == 'text/html' || toContentType == 'application/xhtml+xml')) {
+console.log('00 ' + fromContentType + ' ' + toContentType);
+                    candidateResponse = {
+                      'status': '200',
+                      'headers': {
+                        'Content-Type': requestedType +';charset=utf-8',
+                        'Content-Length': Buffer.byteLength(data, 'utf-8'),
+                        'ETag': etag(data),
+                        'Last-Modified': stats.mtime,
+                        'Vary': 'Origin',
+                        'Allow': 'GET, HEAD, OPTIONS'
+                      },
+                      'data': data
+                    };
+
+                    return candidateResponse;
+                  }
+                  else if (toContentType == 'text/html' || toContentType == 'application/xhtml+xml'){
+console.log('01 ' + fromContentType + ' ' + toContentType);
+                    candidateResponse = {
+                      'status': '406'
+                    };
+                    return candidateResponse;
+                  }
+                  else {
+//                    console.log(reason);
+console.log('03 ' + fromContentType + ' ' + toContentType);
+                    candidateResponse = {
+                      'status': '500'
+                    };
+
+                    return candidateResponse;
+                  }
+                });
+          }
+
+          let promises = [];
+
           availableTypes.forEach(function(fromContentType){
-            serializeData(data, fromContentType, toContentType, options).then(
-              function(transformedData){
-                var outputData = (fromContentType != toContentType) ? transformedData : data;
+            console.log('## Pushing promise for: ' + fromContentType);
+            promises.push(getCandidateResponse(fromContentType));
+          });
 
-                res.set('Content-Type', requestedType +';charset=utf-8');
-                res.set('Content-Length', Buffer.byteLength(outputData, 'utf-8'));
-                res.set('ETag', etag(outputData));
-                res.set('Last-Modified', stats.mtime);
-                res.set('Vary', 'Origin');
-                res.set('Allow', 'GET, HEAD, OPTIONS');
+          Promise.all(promises)
+            .then((results) => {
+              console.log("All done", results);
 
+              var r = results.find(function(i){
+                return i.status == 200;
+              });
+
+console.log(r);
+
+              if(r) {
                 switch(req.method) {
                   case 'GET': default:
                     res.status(200);
-                    res.send(outputData);
+                    res.send(candidateResponse.data);
                     break;
                   case 'HEAD':
                     res.status(200);
@@ -688,19 +756,31 @@ function handleResource(req, res, next){
                     res.end();
                     break;
                 }
-
-                return next();
-              },
-              function(reason){
-                unserializeableCount++;
-                if(availableTypes.length == unserializeableCount) {
-                  res.status(500);
-                  res.end();
-                  return next();
-                }
               }
-            );
-          });
+              else {
+console.log(r);
+
+                var z = results.find(function(i){
+                  return i.status == 406;
+                });
+
+console.log(z);
+
+                if(z) {
+                  res.status(z.status);
+                }
+                else {
+                  res.status(500);
+                }
+
+                res.end();
+                return next();
+              }
+            })
+            .catch((e) => {
+              console.log('--- catch ---');
+              console.log(e);
+            });
         });
       }
       else {
@@ -740,10 +820,7 @@ function handleResource(req, res, next){
               var toContentType = requestedType;
               var options = { 'subjectURI': req.getUrl() };
 
-              return serializeData(data, fromContentType, toContentType, options).then(
-                function(i) { resolve(i); },
-                function(j) { reject(j); }
-              );
+              return serializeData(data, fromContentType, toContentType, options);
             }
           });
         };
@@ -797,7 +874,7 @@ function postContainer(req, res, next){
   var data = req.rawBody;
   var mediaType = contentType.parse(req.headers['content-type']).type;
 
-  if(req.is('application/ld+json') || req.is('text/turtle')) {
+  if(req.is('application/ld+json') || req.is('text/turtle') || req.is('text/html') || req.is('application/xhtml+xml')) {
     var contentLength = Buffer.byteLength(data, 'utf-8');
     var createRequest = (contentLength < maxPayloadSize) ? true : false;
     var url = req.getUrl();
@@ -979,8 +1056,21 @@ function getGraphFromData(data, options) {
   if (!('subjectURI' in options)) {
     options['subjectURI'] = '_:dokieli';
   }
-
-  return SimpleRDF.parse(data, options['contentType'], options['subjectURI']);
+console.log('1070 getGraphFromData: ')
+console.log(options);
+  return SimpleRDF.parse(data, options['contentType'], options['subjectURI'])
+  .then(function(i){
+    console.log('%%%   resolve');
+    return i;
+  },
+  function(r){
+    console.log('%%%   reject');
+    return Promise.reject(r);
+  })
+  .catch(function(e){
+    console.log('%%%   catch');
+    return e;
+  });
 }
 
 function getGraph(url) {
@@ -1001,14 +1091,23 @@ function serializeData(data, fromContentType, toContentType, options) {
     'contentType': fromContentType,
     'subjectURI': options.subjectURI
   };
-  return getGraphFromData(data, o).then(
-    function(g) {
+  return getGraphFromData(data, o)
+  .then(function(g){
+    if(RDFstore.serializers[toContentType]) {
+      console.log('--- serializeData serializeable: ' + fromContentType + ' ' + toContentType);
       return serializeGraph(g, { 'contentType': toContentType });
-    },
-    function(reason) {
-      return Promise.reject(reason);
     }
-  );
+    else {
+      console.log(data);
+      console.log('--- serializeData unserializeable: ' + fromContentType + ' ' + toContentType);
+      return Promise.reject();
+    }
+  })
+  .catch(function(reason){
+    console.log(data);
+    console.log('--- serializeData unparseable: ' + fromContentType + ' ' + toContentType);
+//    console.log(reason);
+  });
 }
 
 //https://github.com/solid/solid.js/blob/master/lib/util/web-util.js

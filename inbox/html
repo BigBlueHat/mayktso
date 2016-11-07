@@ -1,0 +1,2 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><meta charset="utf-8" /><title>http://localhost:3000/annotation/z</title></head><body><main><article id="z" about="i:" typeof="oa:Annotation" prefix="rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# schema: http://schema.org/ dcterms: http://purl.org/dc/terms/ oa: http://www.w3.org/ns/oa# as: https://www.w3.org/ns/activitystreams# i: http://localhost:3000/annotation/z"><h1 property="schema:name">Hello Worldn</h1></article></main></body></html>

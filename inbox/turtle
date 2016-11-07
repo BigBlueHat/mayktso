@@ -1,0 +1,54 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rdfa: <http://www.w3.org/ns/rdfa#>.
+@prefix xhv: <http://www.w3.org/1999/xhtml/vocab#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+<urn:uuid:02adc0d7-81d4-4297-9c3b-6b4a3fad779c> a <http://www.w3.org/ns/prov#Activity>;
+    rdfs:label "Consistency check";
+    <http://www.w3.org/ns/prov#startedAtTime> "2016-10-17T13:54:23.907+02:00"^^xsd:dateTime;
+    <http://www.w3.org/ns/prov#used> <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/thisObs10000>, <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/mix9>;
+    <http://www.w3.org/ns/prov#wasAssociatedWith> <http://stardog.com/>.
+<urn:uuid:2efc8e0c-6c9f-41f6-862d-63e7f2c0229c> a <http://www.w3.org/ns/oa#Annotation>;
+    <http://www.w3.org/ns/oa#hasBody> <urn:uuid:a8a804ac-5ec0-4802-ae27-06efdeb7e1f6>;
+    <http://www.w3.org/ns/oa#hasTarget> <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/thisObs10000>;
+    <http://www.w3.org/ns/prov#generatedAtTime> "2016-10-17T13:54:23.907+02:00"^^xsd:dateTime;
+    <http://www.w3.org/ns/prov#wasGeneratedBy> <urn:uuid:02adc0d7-81d4-4297-9c3b-6b4a3fad779c>.
+<urn:uuid:341134b9-6dbe-4e24-bb06-b9e87a584787> a rdfs:Resource;
+    <http://bit.ly/linked-edit-rules#inconsistentWith> <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/cat5>.
+<urn:uuid:3b3090e6-a20a-40ab-acd2-14075c38adfb> a <http://www.w3.org/ns/oa#Annotation>;
+    <http://www.w3.org/ns/oa#hasBody> <urn:uuid:341134b9-6dbe-4e24-bb06-b9e87a584787>;
+    <http://www.w3.org/ns/oa#hasTarget> <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/thisObs10000>;
+    <http://www.w3.org/ns/prov#generatedAtTime> "2016-10-17T13:54:23.907+02:00"^^xsd:dateTime;
+    <http://www.w3.org/ns/prov#wasGeneratedBy> <urn:uuid:c3acc94d-03dc-4c7e-9118-c5c329c06370>.
+<urn:uuid:3bc7fd85-eeb6-4c27-8b65-892c46b7de82> a <http://www.w3.org/ns/oa#Annotation>;
+    <http://www.w3.org/ns/oa#hasBody> <urn:uuid:d850a88e-13d2-4e92-8fd2-5caf6b9ff8e3>;
+    <http://www.w3.org/ns/oa#hasTarget> <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/thisObs10001>;
+    <http://www.w3.org/ns/prov#generatedAtTime> "2016-10-17T13:54:23.907+02:00"^^xsd:dateTime;
+    <http://www.w3.org/ns/prov#wasGeneratedBy> <urn:uuid:e1425891-5b0c-49b9-aca9-a2852a2b6814>.
+<urn:uuid:484a9fec-b37b-4204-82e4-ecaf42637d17> a <http://www.w3.org/ns/prov#Activity>;
+    rdfs:label "Consistency check";
+    <http://www.w3.org/ns/prov#startedAtTime> "2016-10-17T13:54:23.907+02:00"^^xsd:dateTime;
+    <http://www.w3.org/ns/prov#used> <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/thisObs10001>, <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/cat5>;
+    <http://www.w3.org/ns/prov#wasAssociatedWith> <http://stardog.com/>.
+<urn:uuid:902e41ca-54dd-4682-a10a-94a5b5828996> a <http://www.w3.org/ns/oa#Annotation>;
+    <http://www.w3.org/ns/oa#hasBody> <urn:uuid:7ff6efb1-68b9-485f-aa1a-9b697ee12ce6>;
+    <http://www.w3.org/ns/oa#hasTarget> <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/thisObs10001>;
+    <http://www.w3.org/ns/prov#generatedAtTime> "2016-10-17T13:54:23.907+02:00"^^xsd:dateTime;
+    <http://www.w3.org/ns/prov#wasGeneratedBy> <urn:uuid:484a9fec-b37b-4204-82e4-ecaf42637d17>.
+<urn:uuid:a8a804ac-5ec0-4802-ae27-06efdeb7e1f6> a rdfs:Resource;
+    <http://bit.ly/linked-edit-rules#inconsistentWith> <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/mix9>.
+<urn:uuid:c3acc94d-03dc-4c7e-9118-c5c329c06370> a <http://www.w3.org/ns/prov#Activity>;
+    rdfs:label "Consistency check";
+    <http://www.w3.org/ns/prov#startedAtTime> "2016-10-17T13:54:23.907+02:00"^^xsd:dateTime;
+    <http://www.w3.org/ns/prov#used> <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/thisObs10000>, <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/cat5>;
+    <http://www.w3.org/ns/prov#wasAssociatedWith> <http://stardog.com/>.
+<urn:uuid:d850a88e-13d2-4e92-8fd2-5caf6b9ff8e3> a rdfs:Resource;
+    <http://bit.ly/linked-edit-rules#inconsistentWith> <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/mix9>.
+<urn:uuid:e1425891-5b0c-49b9-aca9-a2852a2b6814> a <http://www.w3.org/ns/prov#Activity>;
+    rdfs:label "Consistency check";
+    <http://www.w3.org/ns/prov#startedAtTime> "2016-10-17T13:54:23.907+02:00"^^xsd:dateTime;
+    <http://www.w3.org/ns/prov#used> <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/thisObs10001>, <http://lod.cedar-project.nl:8888/linked-edit-rules/resource/mix9>;
+    <http://www.w3.org/ns/prov#wasAssociatedWith> <http://stardog.com/>.
+
